@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/20"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.weather.controller.MainController"
+      spacing="10" alignment="CENTER" stylesheets="/styles/style.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    <Label text="Weather App" styleClass="header"/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints valignment="CENTER"/>
+        </rowConstraints>
+
+        <Label text="City:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="cityField" promptText="Enter city"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="From:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="fromDate" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="To:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="toDate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Button fx:id="forecastBtn" text="Show History" styleClass="primary-button"/>
+    <ProgressIndicator fx:id="progressIndicator" visible="false"/>
+    <Label fx:id="statusLabel" text="Ready" styleClass="status"/>
+</VBox>
