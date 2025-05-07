@@ -11,15 +11,22 @@
     <padding>
         <Insets top="15" right="15" bottom="15" left="15"/>
     </padding>
-    <Label text="Temperature over Time" styleClass="header"/>
+
+    <!-- ComboBox do wyboru metryki -->
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Show:"/>
+        <ComboBox fx:id="metricSelector" prefWidth="200"/>
+    </HBox>
+
     <LineChart fx:id="chart">
         <xAxis>
             <CategoryAxis label="Time"/>
         </xAxis>
         <yAxis>
-            <NumberAxis label="Temp (°C)"/>
+            <NumberAxis label="Value"/>
         </yAxis>
     </LineChart>
+
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button fx:id="exportBtn" text="Export to TXT" styleClass="secondary-button"/>
     </HBox>

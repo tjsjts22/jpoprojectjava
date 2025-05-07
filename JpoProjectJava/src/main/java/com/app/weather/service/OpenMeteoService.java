@@ -25,16 +25,25 @@ public class OpenMeteoService {
                 .build();
     }
 
+    /**
+     * Pobiera prognozę wraz z temperaturą, wilgotnością, prędkością wiatru,
+     * opadami i ciśnieniem.
+     */
     public Optional<WeatherData> getForecast(Location loc) {
         String uri = String.format(
-                "%s?latitude=%.6f&longitude=%.6f&hourly=temperature_2m,relativehumidity_2m",
+                "%s?latitude=%.6f&longitude=%.6f"
+                        + "&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,pressure_msl",
                 BASE_URL, loc.latitude(), loc.longitude());
         return sendRequest(uri);
     }
 
+    /**
+     * Pobiera dane historyczne dla tych parametrów.
+     */
     public Optional<WeatherData> getHistoricalData(Location loc, LocalDate from, LocalDate to) {
         String uri = String.format(
-                "%s/history?latitude=%.6f&longitude=%.6f&start_date=%s&end_date=%s&hourly=temperature_2m",
+                "%s?latitude=%.6f&longitude=%.6f&start_date=%s&end_date=%s"
+                        + "&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,pressure_msl",
                 BASE_URL, loc.latitude(), loc.longitude(), from, to);
         return sendRequest(uri);
     }
@@ -57,7 +66,6 @@ public class OpenMeteoService {
                 // retry
             }
         }
-
         return Optional.empty();
     }
 }
