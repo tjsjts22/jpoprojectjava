@@ -12,7 +12,34 @@
     </padding>
     <Label text="Weather App" styleClass="header"/>
 
-    <GridPane hgap="10" vgap="10">
+    <!-- Wybór trybu: Forecast vs History -->
+    <HBox spacing="10" alignment="CENTER">
+        <RadioButton fx:id="forecastRadio" text="Forecast" selected="true"/>
+        <RadioButton fx:id="historyRadio" text="History"/>
+    </HBox>
+
+    <!-- Wybór metody lokalizacji -->
+    <HBox spacing="10" alignment="CENTER">
+        <RadioButton fx:id="cityRadio" text="City Name" selected="true"/>
+        <RadioButton fx:id="coordsRadio" text="Coordinates"/>
+    </HBox>
+
+    <!-- Pole dla nazwy miasta -->
+    <HBox fx:id="cityInputBox" spacing="10" alignment="CENTER">
+        <Label text="City:"/>
+        <TextField fx:id="cityField" promptText="Enter city"/>
+    </HBox>
+
+    <!-- Pola dla koordynatów -->
+    <HBox fx:id="coordsInputBox" spacing="10" alignment="CENTER" visible="false">
+        <Label text="Lat:"/>
+        <TextField fx:id="latField" promptText="Latitude" prefWidth="100"/>
+        <Label text="Lon:"/>
+        <TextField fx:id="lonField" promptText="Longitude" prefWidth="100"/>
+    </HBox>
+
+    <!-- DatePickers tylko w trybie History -->
+    <GridPane fx:id="dateBox" hgap="10" vgap="10" visible="false">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"/>
             <ColumnConstraints hgrow="ALWAYS"/>
@@ -20,19 +47,13 @@
         <rowConstraints>
             <RowConstraints valignment="CENTER"/>
         </rowConstraints>
-
-        <Label text="City:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="cityField" promptText="Enter city"
-                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-        <Label text="From:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <DatePicker fx:id="fromDate" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-        <Label text="To:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <DatePicker fx:id="toDate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="From:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="fromDate" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="To:"   GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="toDate"   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
     </GridPane>
 
-    <Button fx:id="forecastBtn" text="Show History" styleClass="primary-button"/>
+    <Button fx:id="forecastBtn" text="Show Forecast" styleClass="primary-button"/>
     <ProgressIndicator fx:id="progressIndicator" visible="false"/>
     <Label fx:id="statusLabel" text="Ready" styleClass="status"/>
 </VBox>

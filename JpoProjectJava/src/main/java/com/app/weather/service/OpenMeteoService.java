@@ -1,5 +1,10 @@
 package com.app.weather.service;
 
+import com.app.weather.cache.CacheClient;
+import com.app.weather.model.Location;
+import com.app.weather.model.WeatherData;
+import com.google.gson.Gson;
+
 import com.app.weather.model.Location;
 import com.app.weather.model.WeatherData;
 import com.google.gson.Gson;
@@ -18,37 +23,47 @@ public class OpenMeteoService {
     private static final String BASE_URL = "https://api.open-meteo.com/v1/forecast";
     private final HttpClient client;
     private final Gson gson = new Gson();
+    private final CacheClient<WeatherData> cacheClient;
 
-    public OpenMeteoService() {
+    // Konstruktor pozwala wstrzyknąć klienta cache
+    public OpenMeteoService(CacheClient<WeatherData> cacheClient) {
         this.client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        this.cacheClient = cacheClient;
     }
 
-    /**
-     * Pobiera prognozę wraz z temperaturą, wilgotnością, prędkością wiatru,
-     * opadami i ciśnieniem.
-     */
     public Optional<WeatherData> getForecast(Location loc) {
         String uri = String.format(
-                "%s?latitude=%.6f&longitude=%.6f"
-                        + "&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,pressure_msl",
+                "%s?latitude=%.6f&longitude=%.6f&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,pressure_msl",
                 BASE_URL, loc.latitude(), loc.longitude());
-        return sendRequest(uri);
+        return fetchData(loc, null, null, uri);
     }
 
-    /**
-     * Pobiera dane historyczne dla tych parametrów.
-     */
     public Optional<WeatherData> getHistoricalData(Location loc, LocalDate from, LocalDate to) {
         String uri = String.format(
-                "%s?latitude=%.6f&longitude=%.6f&start_date=%s&end_date=%s"
-                        + "&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,pressure_msl",
+                "%s?latitude=%.6f&longitude=%.6f&start_date=%s&end_date=%s&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,pressure_msl",
                 BASE_URL, loc.latitude(), loc.longitude(), from, to);
-        return sendRequest(uri);
+        return fetchData(loc, from, to, uri);
     }
 
-    private Optional<WeatherData> sendRequest(String uri) {
+    private Optional<WeatherData> fetchData(Location loc, LocalDate from, LocalDate to, String uri) {
+        // Budowanie klucza cache
+        String key = loc.latitude() + "," + loc.longitude();
+        if (from != null && to != null) {
+            key += ":" + from + ":" + to;
+        }
+        System.out.println("[CACHE] Checking key: " + key);
+
+        // Sprawdzenie cache
+        Optional<WeatherData> cached = cacheClient.get(key);
+        if (cached.isPresent()) {
+            System.out.println("[CACHE] Hit! Returning cached data for " + key);
+            return cached;
+        }
+        System.out.println("[CACHE] Miss! Calling HTTP for " + uri);
+
+        // Wywołanie HTTP
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(uri))
@@ -58,14 +73,21 @@ public class OpenMeteoService {
         for (int attempt = 1; attempt <= 3; attempt++) {
             try {
                 HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+                System.out.println("[HTTP] Attempt " + attempt + ", status: " + response.statusCode());
                 if (response.statusCode() == 200) {
                     WeatherData data = gson.fromJson(response.body(), WeatherData.class);
+                    System.out.println("[HTTP] Parsed data points: " + data.toHourlyPoints().size());
+                    // Zapis do cache
+                    cacheClient.put(key, data);
+                    System.out.println("[CACHE] Stored data under key: " + key);
                     return Optional.of(data);
                 }
             } catch (IOException | InterruptedException e) {
-                // retry
+                System.out.println("[HTTP] Error on attempt " + attempt + ": " + e.getMessage());
             }
         }
+
+        System.out.println("[CACHE] No data available after retries for " + key);
         return Optional.empty();
     }
 }
