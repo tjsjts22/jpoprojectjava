@@ -1,6 +1,6 @@
 package com.app.weather.controller;
 
-import com.app.weather.cache.FileCacheClient;
+import com.app.weather.cache.RedisCacheClient;
 import com.app.weather.cache.CacheClient;
 import com.app.weather.model.Location;
 import com.app.weather.model.WeatherData;
@@ -37,15 +37,23 @@ public class MainController {
 
     private final GeocodingService geoService = new GeocodingService();
     private final OpenMeteoService weatherService;
-
+/*
     public MainController() {
         CacheClient<WeatherData> cache;
         try {
-            cache = new FileCacheClient<>(WeatherData.class);
+            cache = new RedisCacheClient<>(WeatherData.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initialize cache", e);
         }
         this.weatherService = new OpenMeteoService(cache);
+    }
+*/
+
+    public MainController() {
+        // TTL w sekundach, np. 3600 = 1 godzina
+        CacheClient<WeatherData> cache = new RedisCacheClient<>(WeatherData.class, 10);
+        this.weatherService = new OpenMeteoService(cache);
+
     }
 
     @FXML
