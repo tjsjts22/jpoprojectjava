@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10" stylesheets="/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.weather.controller.ChartController">
+    <padding>
+        <Insets bottom="15" left="15" right="15" top="15" />
+    </padding>
+
+    <HBox alignment="CENTER" spacing="10">
+        <Label text="Show:" />
+        <ComboBox fx:id="metricSelector" prefWidth="200" />
+    </HBox>
+
+    <!-- LineChart rośnie w pionie wraz z kontenerem -->
+    <LineChart fx:id="chart" prefHeight="0" VBox.vgrow="ALWAYS">
+        <xAxis>
+            <CategoryAxis label="Time" tickLabelFill="WHITE" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Value" tickLabelFill="WHITE" />
+        </yAxis>
+    </LineChart>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="exportBtn" styleClass="secondary-button" text="Export to TXT" />
+    </HBox>
+</VBox>

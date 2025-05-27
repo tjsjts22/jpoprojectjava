@@ -1,0 +1,74 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: #e0e0e0;
+}
+.header {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+.primary-button {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #e0e0e0;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+}
+.secondary-button {
+    -fx-background-color: #4e5254;
+    -fx-text-fill: #e0e0e0;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12;
+}
+.status {
+    -fx-font-size: 12px;
+    -fx-text-fill: #cfcfcf;
+}
+.text-field, .date-picker, .combo-box, .choice-box, .radio-button {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #e0e0e0;
+}
+.line-chart .chart-plot-background {
+    -fx-background-color: #2b2b2b;
+}
+.category-axis .axis-label,
+.number-axis .axis-label,
+.axis .tick-mark-label {
+    -fx-text-fill: #e0e0e0;
+}
+.label {
+    -fx-text-fill: #e0e0e0;
+}
+/* 1. Białe napisy w elementach listy ComboBox */
+.combo-box .list-cell,
+.combo-box .list-cell:filled {
+    -fx-text-fill: #ffffff;   /* biały tekst w ComboBoxie */
+}
+
+
+
+/* Alternatywne selektory, gdyby powyższy nie działał */
+.chart-plot-background,
+.chart-plot-content {
+    -fx-background-color: #2b2b2b !important;
+}
+
+.chart-legend {
+    -fx-background-color: #333333 !important;
+    -fx-padding: 5;
+    -fx-background-radius: 4;
+}
+
+
+/* Dark mode for ComboBox popup list */
+.combo-box .list-view {
+    -fx-background-color: #3c3f41;
+}
+.combo-box .list-view .list-cell {
+    -fx-text-fill: #e0e0e0;
+    -fx-background-color: transparent;
+}
+.combo-box .list-view .list-cell:selected,
+.combo-box .list-view .list-cell:focused {
+    -fx-background-color: #505354;
+}
